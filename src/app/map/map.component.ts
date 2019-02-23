@@ -54,6 +54,18 @@ export class MapComponent implements OnInit {
     };
     this.service.findPlaceFromQuery(request, (places, status) => {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
+        var flightPlanCoordinates = [
+          this.marker.position,
+          places[0].geometry.location
+        ];
+        var flightPath = new google.maps.Polyline({
+          path: flightPlanCoordinates,
+          geodesic: true,
+          strokeColor: "#FF0000",
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+        flightPath.setMap(this.map);
         this.marker.setPosition(places[0].geometry.location);
         if (places && places[0] && places[0].photos && places[0].photos[0]) {
           this.infowindow.setContent(
