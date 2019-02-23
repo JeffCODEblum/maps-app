@@ -69,7 +69,9 @@ export class MapComponent implements OnInit {
         this.marker.setPosition(places[0].geometry.location);
         if (places && places[0] && places[0].photos && places[0].photos[0]) {
           this.infowindow.setContent(
-            "<img id='thumbnail' src='" +
+            "<label>" +
+              this.searchString +
+              "</label><br /><img id='thumbnail' src='" +
               places[0].photos[0].getUrl() +
               "' width='150px;' height='150px;' />"
           );
@@ -78,13 +80,13 @@ export class MapComponent implements OnInit {
         }
         setTimeout(() => {
           this.infowindow.open(this.map, this.marker);
-          console.log("thumbnail", document.getElementById("thumbnail"));
+          this.searchString = null;
         }, 200);
       } else {
         console.log(status);
+        this.searchString = null;
       }
     });
-    this.searchString = null;
   }
 
   handleMapClick(event) {
