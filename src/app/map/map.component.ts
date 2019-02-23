@@ -40,10 +40,13 @@ export class MapComponent implements OnInit {
     google.maps.event.addListener(this.map, "click", event => {
       this.handleMapClick(event);
     });
+
+    this.marker.addListener("mouseover", () => {
+      console.log("rolled over marker");
+    });
   }
 
   search() {
-    console.log(this.searchString);
     this.infowindow.close();
     var request = {
       query: this.searchString,
@@ -51,11 +54,10 @@ export class MapComponent implements OnInit {
     };
     this.service.findPlaceFromQuery(request, (places, status) => {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
-        console.log(places);
         this.marker.setPosition(places[0].geometry.location);
         if (places && places[0] && places[0].photos && places[0].photos[0]) {
           this.infowindow.setContent(
-            "<img src='" +
+            "<img #thumbnail src='" +
               places[0].photos[0].getUrl() +
               "' width='150px;' height='150px;' />"
           );
@@ -73,8 +75,19 @@ export class MapComponent implements OnInit {
   }
 
   handleMapClick(event) {
+    console.log(this.marker.position);
+    console.log(event);
     this.infowindow.close();
-    console.log("clicked map", event.latLng);
+    var flightPlanCoordinates = [this.marker.position, event.latLng];
+    var flightPath = new google.maps.Polyline({
+      path: flightPlanCoordinates,
+      geodesic: true,
+      strokeColor: "#FF0000",
+      strokeOpacity: 1.0,
+      strokeWeight: 2
+    });
+    flightPath.setMap(this.map);
+
     this.marker.setPosition(event.latLng);
     this.geocoder.geocode({ location: event.latLng }, results => {
       let addr = results[0].formatted_address;
@@ -86,7 +99,6 @@ export class MapComponent implements OnInit {
       };
       this.service.findPlaceFromQuery(request, (places, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
-          console.log(places);
           //   this.marker.setPosition(places[0].geometry.location);
           if (places && places[0] && places[0].photos && places[0].photos[0]) {
             this.infowindow.setContent(
@@ -105,6 +117,5 @@ export class MapComponent implements OnInit {
         }
       });
     });
-    // this.infowindow.open(this.map, this.marker);
   }
 }
