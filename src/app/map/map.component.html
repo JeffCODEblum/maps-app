@@ -1,0 +1,27 @@
+<div class="container-fluid">
+  <div class="row">
+    <div
+      class="col-sm-12"
+      style="padding-top: 15px; padding-bottom: 15px; display:flex; justify-content: flex-start; flex-direction: row; align-items: center;"
+    >
+      <input
+        [(ngModel)]="searchString"
+        class="form-control"
+        type="text"
+        placeholder="Location Search"
+      />
+      <button
+        (click)="search()"
+        class="btn btn-primary"
+        style="margin-left: 10px;"
+      >
+        Go
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div #gmap style="width:100%;height:400px"></div>
+    </div>
+  </div>
+</div>
