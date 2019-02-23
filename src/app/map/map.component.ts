@@ -69,7 +69,7 @@ export class MapComponent implements OnInit {
         this.marker.setPosition(places[0].geometry.location);
         if (places && places[0] && places[0].photos && places[0].photos[0]) {
           this.infowindow.setContent(
-            "<img #thumbnail src='" +
+            "<img id='thumbnail' src='" +
               places[0].photos[0].getUrl() +
               "' width='150px;' height='150px;' />"
           );
@@ -78,6 +78,7 @@ export class MapComponent implements OnInit {
         }
         setTimeout(() => {
           this.infowindow.open(this.map, this.marker);
+          console.log("thumbnail", document.getElementById("thumbnail"));
         }, 200);
       } else {
         console.log(status);
@@ -87,8 +88,6 @@ export class MapComponent implements OnInit {
   }
 
   handleMapClick(event) {
-    console.log(this.marker.position);
-    console.log(event);
     this.infowindow.close();
     var flightPlanCoordinates = [this.marker.position, event.latLng];
     var flightPath = new google.maps.Polyline({
@@ -104,7 +103,6 @@ export class MapComponent implements OnInit {
     this.geocoder.geocode({ location: event.latLng }, results => {
       let addr = results[0].formatted_address;
       let city = addr.slice(addr.indexOf(",") + 1);
-      console.log(city);
       var request = {
         query: "city" + city,
         fields: ["name", "geometry", "photos"]
@@ -114,7 +112,9 @@ export class MapComponent implements OnInit {
           //   this.marker.setPosition(places[0].geometry.location);
           if (places && places[0] && places[0].photos && places[0].photos[0]) {
             this.infowindow.setContent(
-              "<img src='" +
+              "<label>" +
+                city +
+                "</label><br/><img src='" +
                 places[0].photos[0].getUrl() +
                 "' width='150px;' height='150px;' />"
             );
