@@ -1,8 +1,10 @@
 
+# MapsApp
+
 This is a small angular app with Google Maps and Places integration.
 
+![alt text](./maps-app6.gif)
 
-# MapsApp
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.1.
 
