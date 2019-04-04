@@ -18,10 +18,17 @@ export class MapComponent implements OnInit {
   public service: any;
   public geocoder: any;
   public searchString: string;
+  public showModal: boolean;
+  public modalTitle: string;
+  public imgData: any;
 
   constructor() {}
 
   ngOnInit(): void {
+    this.showModal = false;
+    this.imgData = {
+      imgSrc: ""
+    };
     var position = new google.maps.LatLng(29, -83);
     var mapProp = {
       center: position,
@@ -41,9 +48,9 @@ export class MapComponent implements OnInit {
       this.handleMapClick(event);
     });
 
-    this.marker.addListener("mouseover", () => {
-      console.log("rolled over marker");
-    });
+    // this.marker.addListener("mouseover", () => {
+    //   console.log("rolled over marker");
+    // });
   }
 
   search() {
@@ -113,18 +120,35 @@ export class MapComponent implements OnInit {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
           //   this.marker.setPosition(places[0].geometry.location);
           if (places && places[0] && places[0].photos && places[0].photos[0]) {
+            this.imgData.imgSrc = places[0].photos[0].getUrl();
             this.infowindow.setContent(
               "<label>" +
                 city +
-                "</label><br/><img src='" +
-                places[0].photos[0].getUrl() +
+                "</label><br/><img id='thumbnail' src='" +
+                this.imgData.imgSrc +
                 "' width='150px;' height='150px;' />"
             );
+            console.log(this.imgData);
+            this.modalTitle = city;
           } else {
             this.infowindow.setContent("<p>Image Unavailable</p>");
           }
           setTimeout(() => {
             this.infowindow.open(this.map, this.marker);
+            if (document.getElementById("thumbnail")) {
+              document
+                .getElementById("thumbnail")
+                .addEventListener("mouseenter", event => {
+                  this.showModal = true;
+                  console.log("in");
+                });
+              document
+                .getElementById("thumbnail")
+                .addEventListener("mouseleave", event => {
+                  //   this.showModal = false;
+                  console.log("out");
+                });
+            }
           }, 200);
         } else {
           console.log(status);
